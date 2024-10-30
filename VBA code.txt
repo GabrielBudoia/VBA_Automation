@@ -1,0 +1,76 @@
+Sub Macro2()
+
+
+'Delete Columns U and Y
+
+Columns("U:Y").Delete
+
+Application.Wait (Now + TimeValue("0:00:1"))
+
+'Delete Columns U and Y
+
+Columns("U:Y").Delete
+
+Application.Wait (Now + TimeValue("0:00:1"))
+
+'Add Columns Date and Hour
+
+Range("U1") = "Data"
+Range("V1") = "Status"
+
+Application.Wait (Now + TimeValue("0:00:1"))
+
+'Find and Replace
+    Columns("G:G").Select
+    Selection.Replace What:=".", Replacement:=",", LookAt:=xlPart, _
+            SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+            ReplaceFormat:=False, FormulaVersion:=xlReplaceFormula2
+
+    Range("W1").Select
+    ActiveCell.FormulaR1C1 = "Valor"
+    Range("W2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC[-17]=""Debito"",VALUE(RC[-16]),VALUE(RC[-16])*-1)"
+    Range("W2").Copy
+    Range("B2").Select
+    Selection.End(xlDown).Select
+    ActiveCell.Offset(0, 21).Select
+    Range(Selection, Selection.End(xlUp)).Select
+    ActiveSheet.Paste
+    
+    Columns("W:W").Select
+    Application.CutCopyMode = False
+    Selection.Copy
+    Columns("G:G").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("W:X").Select
+    Application.CutCopyMode = False
+    Selection.ClearContents
+    
+Application.Wait (Now + TimeValue("0:00:1"))
+
+'Filter
+
+Range("A1").AutoFilter Field:=19, Criteria1:="Efetivado"
+
+Application.Wait (Now + TimeValue("0:00:1"))
+
+
+'pix_in or pix_out
+
+Range("A1").AutoFilter Field:=6, Criteria1:="Credito"
+Columns("V") = "pix_in"
+
+Application.Wait (Now + TimeValue("0:00:2"))
+
+Range("A1").AutoFilter Field:=6, Criteria1:="Debito"
+Columns("V") = "pix_out"
+
+Application.Wait (Now + TimeValue("0:00:1"))
+
+Range("V1") = "Status"
+
+Range("A1").AutoFilter Field:=6, Criteria1:="Credito"
+
+End Sub
